@@ -69,6 +69,15 @@ RUN cp -a /usr/src/ModSecurity/modsecurity.conf-recommended /etc/nginx/modsecuri
  && mv REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf.example REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf \
  && mv RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf.example RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
 
+# tune nginx
+RUN sed -i 's^worker_processes  1;^worker_processes auto;^g' /etc/nginx/nginx.conf \
+ && sed -i -e '/worker_processes/a\' -e 'worker_cpu_affinity auto;' /etc/nginx/nginx.conf \
+ && sed -i 's^worker_connections  1024;^worker_connections  4096;^g' /etc/nginx/nginx.conf \
+ && sed -i -e '/worker_connections/a\' -e '    multi_accept on;' /etc/nginx/nginx.conf
+
+# security nginx
+RUN sed -i -e '/modsecurity_rules_file/a\' -e '    server_tokens off;' /etc/nginx/nginx.conf
+
 # cleanup not needed files
 RUN apt-get -y purge git dpkg-dev apache2-dev libpcre3-dev libxml2-dev \
  && apt -y autoremove \
