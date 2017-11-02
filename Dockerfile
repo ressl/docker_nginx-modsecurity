@@ -11,7 +11,8 @@ RUN apt-get update \
  && apt-get install -y \
             dpkg-dev apache2-dev libpcre3-dev libxml2-dev \
             g++ flex bison doxygen libyajl-dev libgeoip-dev libtool dh-autoreconf libcurl4-gnutls-dev libxml2 libpcre++-dev pkgconf zlib1g-dev \
-            git curl
+            git curl \
+            supervisor
 
 # download modsecurity
 RUN cd /usr/src/ \
